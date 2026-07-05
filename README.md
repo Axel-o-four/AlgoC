@@ -6,17 +6,24 @@
 
 ### Cos'è AlgoC?
 
-AlgoC è un **linguaggio di programmazione** per la scrittura rapida degli algoritmi con la **sintassi degli pseudocodici**: la maggior parte degli algoritmi, anche quelli presentati ai corsi universitari, vengono rappresentati tramite pseudocodice, questo richiede un passaggio di traduzione affinché siano effettivamente compilabili. Con AlgoC è possibile scrivere algoritmi in pseudocodice **compilabili direttamente in C**, senza necessità di traduzione. AlgoC ha un **compilatore completo**, in Python, che traduce algoritmi scritti in pseudocodice direttamente in codice **C eseguibile**. 
+AlgoC è un **linguaggio di programmazione** per scrivere codice con una sintassi **vicina allo pseudocodice** utilizzato nella specifica degli algoritmi: l'obiettivo è **ridurre la distanza** tra la **rappresentazione teorica** di un algoritmo e la sua **esecuzione pratica**. Un programma in AlgoC può essere tradotto automaticamente in codice C e compilato in un eseguibile.
 
-L'obiettivo è eliminare il gap tra la rappresentazione teorica degli algoritmi e la loro implementazione pratica, permettendo di scrivere algoritmi con sintassi pseudocodicale senza necessità di traduzione manuale.
+Il progetto implementa un compilatore completo, formato da:
+
+- Grammatica Lark per generare automaticamente il parser, contenuta in grammar.lark.
+- Analisi lessicale e sintattica tramite lexer e parser Lark, contenuta in ast_generator.py.
+- Costruzione di AST, contenuta in ast_generator.py, tramite i nodi definiti come classi Python, contenuti in ast_nodes.py.
+- Analisi semantica su AST, contenuta in code_generator.py, tramite l’uso di symbol table a livello singolo, contenuta in symbol_table.py.
+- Generazione del codice C dall’AST, contenuta in code_generator.py.
+- Driver generale del compilatore per compilare codice automaticamente da AlgoC a C ad eseguibile tramite gcc, oppure svolgere la sola compilazione da AlgoC a C.
 
 ---
 
 ### Caratteristiche principali
 
-- **Compilazione automatica**: dal codice algoc si genera C ottimizzato e eseguibile.
-- **Data type supportati**: i data type supportati sono `int`, `real`, `string` e `boolean`.
-- **Data structures supportate**: strutture di supporto alla progettazione di algoritmi, come `list`, `stack`, `queue`, `tree` e `graph`, con le rispettive funzioni vengono aggiunte dalla libreria di supporto `algoc.h`.
+- **Compilazione automatica**: dal codice AlgoC si genera codice C ottimizzato e compilabile.
+- **Data type supportati**: i data type supportati sono `int`, `real`, `char`, `string` e `boolean`.
+- **Supporto all'uso di array**: sono supportati gli array di `int`, `real`, `char` e `boolean`.
 - **Strutture di controllo semplificate**: le strutture di controllo vengono ottimizzate per l'iterazione sugli elementi di una struttura dati.
 - **Assegnazione semplificata**: l'assegnazione viene svolta tramite l'operatore `<-`.
 - **Operatori semplificati**: viene rimosso il supporto agli operatori bitwise, di poca utilità in questo campo, e viene semplificato l'uso degli operatori, divisi in:
@@ -27,9 +34,19 @@ L'obiettivo è eliminare il gap tra la rappresentazione teorica degli algoritmi 
 
 ### Struttura di progetto
 
-AlgoC/
-├── README.md                           # Questo file
-├── src/
-│   └── grammar.lark                    # Grammatica in EBNF per Lark
-└── Documentazione/
-    └── ~~ Documentazione grammatica.pdf   # Documentazione della grammatica di AlgoC ~~
+AlgoC/\
+├ README.md # Questo file\
+├ examples/\
+| ├ array.algoc # Esempio programma con uso degli array\
+| ├ calculator.algoc # Esempio di programma con interfaccia e scelta\
+| └ outparam.algoc # Esempio di programma con uso delle variabili out\
+├ doc/\
+| ├ AlgoC - Documentazione tecnica.pdf # Documentazione tecnica di AlgoC in formato PDF\
+| └ AlgoC - Documentazione tecnica.pages # Documentazione tecnica di AlgoC in formato Apple Pages\
+└ src/\
+  ├ algoc.py # Driver generale del compilatore\
+  ├ ast_generator.py # Generatore AST con lexer e parser\
+  ├ ast_nodes.py # Definizione dei nodi dell'AST\
+  ├ code_generator.py # Generazione del codice con analisi semantica\
+  ├ grammar.lark # Grammatica in EBNF per Lark\
+  └ symbol_table.py # Definizione di simbolo e tabella dei simboli\
