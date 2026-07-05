@@ -1,0 +1,64 @@
+% Calcolatrice testuale: menu, input, ciclo di continuazione,
+  quattro funzioni e una procedura. %
+
+func add(a: real, b: real) -> real:
+    return a + b;
+endfunc
+
+func subtract(a: real, b: real) -> real:
+    return a - b;
+endfunc
+
+func multiply(a: real, b: real) -> real:
+    return a * b;
+endfunc
+
+func divide(a: real, b: real) -> real:
+    return a / b;
+endfunc
+
+proc show_menu():
+    --> "1) Addition";
+    --> "2) Subtraction";
+    --> "3) Multiplication";
+    --> "4) Division";
+endproc
+
+prog
+    var
+        choice: int;
+        continue_program: boolean;
+        a, b, result: real;
+    endvar
+
+    continue_program <- true;
+
+    while continue_program do
+        show_menu();
+        --> "Choose an operation:";
+        <-- $(choice);
+        --> "First value:";
+        <-- $(a);
+        --> "Second value:";
+        <-- $(b);
+
+        if choice = 1 then
+            result <- add(a, b);
+        elseif choice = 2 then
+            result <- subtract(a, b);
+        elseif choice = 3 then
+            result <- multiply(a, b);
+        elseif choice = 4 then
+            result <- divide(a, b);
+        else
+            --> "Invalid choice";
+        endif;
+
+        if (choice >= 1) & (choice <= 4) then
+            --> "Result: " $(result);
+        endif;
+
+        --> "Continue? Enter 1 for true and 0 for false:";
+        <-- $(continue_program);
+    endwhile;
+endprog

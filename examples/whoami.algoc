@@ -1,0 +1,9 @@
+var
+name : string;
+endvar
+
+prog
+	--> "What's your name? ";
+	<-- $(name);
+	--> "Hi " $(name) ", it's nice to meet you!";
+endprog
