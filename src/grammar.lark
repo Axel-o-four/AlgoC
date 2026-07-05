@@ -45,9 +45,7 @@ procedure_def: "proc" ID "(" proc_params? ")" ":" body "endproc"
 
 proc_params: proc_param ("," proc_param)*
 
-proc_param: param_direction? ID ":" type
-
-?param_direction: "out"
+proc_param: ID ":" type
 
 // Body of program, function and procedure
 

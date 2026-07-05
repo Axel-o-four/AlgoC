@@ -14,10 +14,6 @@ class Symbol:
     type: Optional[TypeNode] = None
     params: Optional[List[ParamNode]] = None
     return_type: Optional[TypeNode] = None
-    direction: str = "in"
-
-    def is_out(self) -> bool:
-        return self.direction == "out"
 
 class SymbolTable:
     def __init__(self) -> None:

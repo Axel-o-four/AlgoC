@@ -193,7 +193,7 @@ class ASTGenerator:
         type_tree = self._first_tree(tree, "type")
         if type_tree is None:
             raise AlgoCError(f"Parameter {name} specified without type.")
-        return ParamNode(name=name, param_type=self._type(type_tree), direction="in")
+        return ParamNode(name=name, param_type=self._type(type_tree))
 
     def _procedure_def(self, tree: Tree) -> ProcedureDefNode:
         name = self._first_token(tree, "ID").value
@@ -213,12 +213,11 @@ class ASTGenerator:
         return [self._proc_param(t) for t in self._find_direct_trees(tree, "proc_param")]
 
     def _proc_param(self, tree: Tree) -> ParamNode:
-        out = any(isinstance(c, Token) and c.type == "OUT" for c in tree.children)
         name = self._first_token(tree, "ID").value
         type_tree = self._first_tree(tree, "type")
         if type_tree is None:
             raise AlgoCError(f"Parameter {name} specified without a type.")
-        return ParamNode(name=name, param_type=self._type(type_tree), direction="out" if out else "in")
+        return ParamNode(name=name, param_type=self._type(type_tree))
 
     def _return_type(self, tree: Tree) -> TypeNode:
         type_tree = self._first_tree(tree, "type")
@@ -236,7 +235,7 @@ class ASTGenerator:
             value = self._first_expr_after(tree.children, target_tree)
             return AssignNode(target=self._lvalue(target_tree), value=value)
 
-        if name == "function_call_stmt":
+        if name == "call_stmt":
             call_tree = self._first_tree(tree, "func_call")
             return CallStmtNode(call=self._func_call(call_tree))
 

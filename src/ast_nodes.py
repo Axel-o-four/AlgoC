@@ -44,10 +44,6 @@ class VarDeclNode(ASTNode):
 class ParamNode(ASTNode):
     name: str
     param_type: TypeNode
-    direction: str = "in"
-
-    def is_out(self) -> bool:
-        return self.direction == "out"
 
 @dataclass
 class FunctionDefNode(ASTNode):

@@ -91,7 +91,6 @@ class CCodeGenerator:
                     name=param.name,
                     kind="parameter",
                     type=param.param_type,
-                    direction=param.direction,
                 )
             )
 
@@ -275,10 +274,7 @@ class CCodeGenerator:
             )
 
         for param, arg in zip(params, node.args):
-            if param.is_out():
-                arg_type = self._check_lvalue(arg)
-            else:
-                arg_type = self._check_expr(arg)
+            arg_type = self._check_expr(arg)
             if not self._assignable(param.param_type, arg_type):
                 raise AlgoCError(
                     f"Parameter {param.name} of {node.name}: expected {param.param_type}, got {arg_type}"
@@ -418,7 +414,7 @@ class CCodeGenerator:
         for param in params:
             if not self.current_table.contains(param.name):
                 self.current_table.declare(
-                    Symbol(param.name, "parameter", param.param_type, direction=param.direction)
+                    Symbol(param.name, "parameter", param.param_type)
                 )
 
 
@@ -586,13 +582,7 @@ class CCodeGenerator:
         params = symbol.params or []
         args = []
         for param, arg in zip(params, node.args):
-            if param.is_out():
-                arg_code = self._emit_lvalue(arg).code
-                if self._needs_address_for_out(param.param_type):
-                    arg_code = f"&{arg_code}"
-                args.append(arg_code)
-            else:
-                args.append(self._emit_expr(arg).code)
+            args.append(self._emit_expr(arg).code)
         return_type = symbol.return_type if symbol.kind == "function" else TypeNode("void")
         return CExpr(f"{node.name}({', '.join(args)})", return_type)
 
@@ -605,12 +595,7 @@ class CCodeGenerator:
         raise AlgoCError("Lvalue non generabile")
 
     def _identifier_code(self, symbol: Symbol) -> str:
-        if symbol.kind == "parameter" and symbol.direction == "out" and self._needs_address_for_out(symbol.type):
-            return f"(*{symbol.name})"
         return symbol.name
-
-    def _needs_address_for_out(self, type_node: TypeNode) -> bool:
-        return not type_node.is_array() and type_node.name != "string"
 
     def _printf_line(self, expr_node: ASTNode) -> str:
         expr = self._emit_expr(expr_node)
@@ -681,8 +666,6 @@ class CCodeGenerator:
             return f"char {param.name}[]"
         if param.param_type.is_array():
             return f"{base} {param.name}[]"
-        if param.is_out():
-            return f"{base} *{param.name}"
         return f"{base} {param.name}"
 
     def _new_temp(self, prefix: str) -> str:
